@@ -14,6 +14,16 @@
 		"gridsize" : [ 15.0, 15.0 ],
 		"boxes" : [ 			{
 				"box" : 				{
+					"id" : "obj-1",
+					"maxclass" : "ezdac~",
+					"numinlets" : 2,
+					"numoutlets" : 0,
+					"patching_rect" : [ 694.090000000000032, 495.329999999999984, 45.0, 45.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"id" : "obj-64",
 					"maxclass" : "toggle",
 					"numinlets" : 1,
@@ -364,7 +374,7 @@
 
 			}
  ],
-		"originid" : "pat-11",
+		"originid" : "pat-52",
 		"parameters" : 		{
 			"obj-49" : [ "live.dial", "A", 0 ],
 			"obj-50" : [ "live.dial[1]", "B", 0 ],
@@ -386,7 +396,7 @@
 ,
 		"dependency_cache" : [ 			{
 				"name" : "ninoMAX.maxpat",
-				"bootpath" : "~/Desktop",
+				"bootpath" : "~/Documents/GitHub/NINO_controller/max",
 				"patcherrelativepath" : ".",
 				"type" : "JSON",
 				"implicit" : 1
