@@ -32,7 +32,8 @@ void loop() {
   }
 
   for (int i = 0; i < analogPinCount; i++){
-    Serial.print(analogRead(analogPins[i]) / 1020.0);
+    float knobs = linearizza(analogRead(analogPins[i]) / 1020.0);
+    Serial.print(knobs);
     Serial.print(" ");
   }
   for (int i = 0; i < analogPinCount; i++){
@@ -42,3 +43,26 @@ void loop() {
   Serial.println("");
   delay(10);
 }
+
+float linearizza(float lettura) {
+  // Ingressi:
+  static const float x[] = {0.00, 0.18, 0.37, 0.41, 0.51, 1.00}; 
+  // Uscite: 
+  static const float y[] = {0.00, 0.25, 0.50, 0.75, 0.87, 1.00};
+
+  // Ingressi:
+  //static const float x[] = {0.00, 0.25, 0.50, 0.75, 1.00}; 
+  // Uscite: 
+  //static const float y[] = {0.00, 0.25, 0.50, 0.75, 1.00};
+  int n_let = 5;
+  if (lettura <= x[0]) return y[0];
+  if (lettura >= x[n_let]) return y[n_let];
+
+  int i = 0;
+  while (lettura > x[i + 1]) i++;
+
+  float frazione = (lettura - x[i]) / (x[i + 1] - x[i]);
+  return y[i] + frazione * (y[i + 1] - y[i]);
+}
+
+
