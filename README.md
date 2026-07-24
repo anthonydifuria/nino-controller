@@ -1,4 +1,4 @@
-# NINO Controller
+# NINO — Node Interface for Networked Output
 
 Progetto per il controller hardware NINO (Arduino) collegato ad ambienti di sintesi/programmazione audio.
 
