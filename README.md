@@ -13,3 +13,5 @@ Progetto per il controller hardware NINO (Arduino) collegato ad ambienti di sint
 
 - Arduino IDE (per il firmware in `firmware/`)
 - Python 3.9+ (per `mapping_layer/`, vedi il suo README)
+
+## altro
