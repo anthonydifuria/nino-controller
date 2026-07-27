@@ -1,4 +1,9 @@
 pyserial
 python-osc
-pystray
-Pillow
+mido
+
+# Nota macOS: se hai JACK installato (es. via Homebrew), l'installazione di
+# python-rtmidi da questo file puo' fallire in compilazione (bug noto di
+# RtMidi col backend JACK su Darwin). Se succede, vedi la sezione
+# "Risoluzione problemi" nel README di questa cartella.
+python-rtmidi

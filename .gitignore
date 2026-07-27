@@ -23,3 +23,22 @@ Temporary Items
 .directory
 .Trash-*
 .nfs*
+
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# build output
+mapping_layer/build/dist/
+mapping_layer/build/*.spec
+
+# Faust: nella cartella receivers/faust tieni solo i sorgenti .dsp e il
+# README -- ignora tutto il resto (eseguibili compilati senza estensione,
+# .cpp intermedi, .o, bundle .app/.dSYM, qualunque nome assumano)
+mapping_layer/receivers/faust/*
+!mapping_layer/receivers/faust/*.dsp
+!mapping_layer/receivers/faust/*.md
