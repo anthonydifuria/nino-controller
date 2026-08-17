@@ -75,9 +75,14 @@ def main() -> None:
     else:
         from .midi_out import MIDIOutput
 
-        output = MIDIOutput(port_name=args.midi_port_name, channel=args.midi_channel - 1)
+        output = MIDIOutput(
+            port_name=args.midi_port_name,
+            channel=args.midi_channel - 1,
+            on_led_command=reader.send_led,
+        )
         output.start()
-        print(f"MIDI: porta virtuale '{args.midi_port_name}' creata, canale {args.midi_channel}")
+        print(f"MIDI: porta virtuale '{args.midi_port_name}' creata (uscita), canale {args.midi_channel}")
+        print(f"MIDI: porta virtuale '{output.led_port_name}' creata (ingresso) per il LED, CC {output.led_cc}")
         print("      (falla comparire come input MIDI nella tua DAW/software)")
 
     last_print = [0.0]
