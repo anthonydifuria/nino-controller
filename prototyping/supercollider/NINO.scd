@@ -18,12 +18,12 @@
         if (api.action.notNil) { api.action.value(api) };
     };
 
-    // --- ping periodico (deve arrivare entro 2s o Arduino si "disconnette") ---
+    // --- periodic ping (must arrive within 2s or the Arduino "disconnects") ---
     pingRoutine = fork {
         loop { port.put(200); 0.5.wait; };
     };
 
-    // --- lettura continua, ricompone le righe e le spacchetta ---
+    // --- continuous read, reassembles lines and unpacks them ---
     readRoutine = fork {
         var byte, line;
         loop {
@@ -38,7 +38,7 @@
         };
     };
 
-    // chiude la porta anche se premi Cmd+. (buona pratica con l'hardware)
+    // close the port even if you press Cmd+. (good practice with hardware)
     cmdPeriodFunc = { port.close };
     CmdPeriod.add(cmdPeriodFunc);
 
