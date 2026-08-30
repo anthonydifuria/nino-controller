@@ -1,54 +1,26 @@
-# Faust — ricevitori NINO
+import("stdfaust.lib");
 
-Due DSP minimi che ricevono i 6 knob + 6 pulsanti del mapping layer NINO e li
-usano per pilotare il volume/on-off di 6 oscillatori a frequenze diverse
-(110-660 Hz), cosi' si sente il risultato invece di dover guardare una GUI.
+vol0 = hslider("knob0[midi:ctrl 20]", 0, 0, 1, 0.01);
+vol1 = hslider("knob1[midi:ctrl 21]", 0, 0, 1, 0.01);
+vol2 = hslider("knob2[midi:ctrl 22]", 0, 0, 1, 0.01);
+vol3 = hslider("knob3[midi:ctrl 23]", 0, 0, 1, 0.01);
+vol4 = hslider("knob4[midi:ctrl 24]", 0, 0, 1, 0.01);
+vol5 = hslider("knob5[midi:ctrl 25]", 0, 0, 1, 0.01);
 
-## MIDI (`faustMIDI_NINO.dsp`)
+on0 = hslider("btn0[midi:ctrl 30]", 0, 0, 1, 0.01);
+on1 = hslider("btn1[midi:ctrl 31]", 0, 0, 1, 0.01);
+on2 = hslider("btn2[midi:ctrl 32]", 0, 0, 1, 0.01);
+on3 = hslider("btn3[midi:ctrl 33]", 0, 0, 1, 0.01);
+on4 = hslider("btn4[midi:ctrl 34]", 0, 0, 1, 0.01);
+on5 = hslider("btn5[midi:ctrl 35]", 0, 0, 1, 0.01);
 
-Testabile subito nel browser, senza installare nulla:
+osc0 = os.osc(110) * vol0 * on0;
+osc1 = os.osc(220) * vol1 * on1;
+osc2 = os.osc(330) * vol2 * on2;
+osc3 = os.osc(440) * vol3 * on3;
+osc4 = os.osc(550) * vol4 * on4;
+osc5 = os.osc(660) * vol5 * on5;
 
-1. Vai su [faustide.grame.fr](https://faustide.grame.fr)
-2. Incolla il contenuto del file
-3. Attiva il MIDI dalle impostazioni dell'IDE (usa la WebMIDI del browser)
-4. Gira i knob/pulsanti sul NINO (con il mapping layer in `--output midi`)
+mix = (osc0+osc1+osc2+osc3+osc4+osc5) * 0.15;
 
-Oppure in locale, senza GUI:
-
-    faust2caconsole -midi faustMIDI_NINO.dsp
-    ./faustMIDI_NINO
-
-## OSC (`faustOSC_NINO.dsp`)
-
-L'OSC non e' testabile nel browser (i browser non hanno accesso a socket UDP
-per motivi di sicurezza) — serve compilarlo in locale. Usiamo
-`faust2caconsole`, che compila un eseguibile da riga di comando senza bisogno
-di nessuna libreria grafica (niente Qt, niente GTK):
-
-    faust2caconsole -osc faustOSC_NINO.dsp
-    ./faustOSC_NINO -port 9000
-
-Il `-port 9000` e' necessario: Faust di default ascolta sulla porta 5510,
-il mapping layer manda invece sulla 9000.
-
-### Risoluzione problemi
-
-**`ld: library 'OSCFaust' not found`** in fase di compilazione: capita quando
-Homebrew ha installato `libOSCFaust` (verificabile con
-`find /opt/homebrew -iname "*OSCFaust*"`) ma il compilatore non sa dove
-cercarla, di solito perche' il setup standard di Homebrew
-(`eval "$(/opt/homebrew/bin/brew shellenv)"` in `~/.zshrc`) manca o non e'
-stato ricaricato in questa sessione di terminale. Fix rapido per la sessione
-corrente:
-
-    export LIBRARY_PATH="/opt/homebrew/lib:$LIBRARY_PATH"
-    faust2caconsole -osc faustOSC_NINO.dsp
-
-Per renderlo permanente (evita di doverlo rifare ad ogni nuovo terminale),
-verifica se manca dal profilo shell:
-
-    grep brew ~/.zshrc
-
-Se non stampa nulla, aggiungilo:
-
-    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zshrc
+process = mix <: _,_;

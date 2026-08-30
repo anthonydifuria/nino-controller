@@ -1,15 +1,26 @@
 # NINO — Node Interface for Networked Output
 
-Progetto per il controller hardware NINO (Arduino) collegato ad ambienti di sintesi/programmazione audio.
+Project for the NINO hardware controller (Arduino) connected to audio synthesis/programming environments.
 
-## Struttura
+## Graphical interface (demo)
 
-- `firmware/` — sketch Arduino per la scheda NINO.
-- `docs/diagrams/` — diagrammi concettuali e fisici del sistema.
-- `mapping_layer/` — applicazione Python: legge la seriale e la traduce in OSC/MIDI.
-- `prototyping/` — implementazioni native indipendenti (Max, Csound, SuperCollider) che parlano direttamente alla seriale.
+Stylized preview of the Python graphical panel (`mapping_layer`, demo mode, simulated values):
 
-## Requisiti
+![Preview of the NINO graphical panel](docs/nino_gui_preview.png)
 
-- Arduino IDE (per il firmware in `firmware/`)
-- Python 3.9+ (per `mapping_layer/`, vedi il suo README)
+## Structure
+
+- `firmware/` — Arduino sketch for the NINO board.
+- `docs/diagrams/` — conceptual and physical diagrams of the system.
+- `mapping_layer/` — Python application: reads the serial data and translates it into OSC/MIDI.
+- `prototyping/` — standalone native implementations (Max, Csound, SuperCollider) that talk directly to the serial port.
+
+## Requirements
+
+- Arduino IDE (for the firmware in `firmware/`)
+- Python 3.9+ (for `mapping_layer/`, see its README)
+
+## Credits
+
+Developed by Anthony Di Furia during the electroacoustic music courses
+with maestro Alessandro Fiordelmondo at the Conservatorio di Cesena.

@@ -1,11 +1,11 @@
 """
-Uscita/ingresso OSC per il mapping layer NINO.
+OSC output/input for the NINO mapping layer.
 
-Manda lo stato (6 knob + 6 pulsanti) come un unico messaggio OSC:
+Sends the state (6 knobs + 6 buttons) as a single OSC message:
     /nino/state  f f f f f f i i i i i i
 
-Riceve comandi LED su:
-    /nino/led  i(id) i(valore 0-255)
+Receives LED commands on:
+    /nino/led  i(id) i(value 0-255)
 """
 
 from __future__ import annotations

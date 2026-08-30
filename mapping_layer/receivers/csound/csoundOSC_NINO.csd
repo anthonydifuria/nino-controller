@@ -15,7 +15,7 @@ instr 1
 
     kk OSClisten giOSC, "/nino/state", "ffffffiiiiii", kK0, kK1, kK2, kK3, kK4, kK5, kB0, kB1, kB2, kB3, kB4, kB5
 
-    printks "knob: %.2f %.2f %.2f %.2f %.2f %.2f | pulsanti: %.0f %.0f %.0f %.0f %.0f %.0f\n", 0.2, kK0, kK1, kK2, kK3, kK4, kK5, kB0, kB1, kB2, kB3, kB4, kB5
+    printks "knob: %.2f %.2f %.2f %.2f %.2f %.2f | buttons: %.0f %.0f %.0f %.0f %.0f %.0f\n", 0.2, kK0, kK1, kK2, kK3, kK4, kK5, kB0, kB1, kB2, kB3, kB4, kB5
 endin
 </CsInstruments>
 <CsScore>

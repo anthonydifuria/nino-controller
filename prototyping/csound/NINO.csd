@@ -9,16 +9,16 @@ nchnls = 2
 0dbfs = 1
 
 ; ============================================================
-;  UDO "NINO controller" - copia questo blocco in cima a
-;  qualsiasi progetto, senza toccarlo
+;  "NINO controller" UDO - copy this block to the top of
+;  any project, without touching it
 ; ============================================================
 
-; array globali: 6 potenziometri (0.0-1.0) e 6 pulsanti (0/1)
+; global arrays: 6 knobs (0.0-1.0) and 6 buttons (0/1)
 gkKnob[] init 6
 gkBtn[]  init 6
 
-; --- NinoUpdate: legge la seriale e aggiorna gkKnob[]/gkBtn[] ---
-; uso: NinoUpdate iPort
+; --- NinoUpdate: reads the serial port and updates gkKnob[]/gkBtn[] ---
+; usage: NinoUpdate iPort
 opcode NinoUpdate, 0, i
     iPort xin
 
@@ -29,14 +29,14 @@ opcode NinoUpdate, 0, i
     kInFrac   init 0
     kSawDigit init 0
 
-    ; ping periodico (deve arrivare entro 2s o Arduino si "disconnette")
+    ; periodic ping (must arrive within 2s or the Arduino "disconnects")
     kNow timeinsts
     if (kNow - kPingTime >= 0.5) then
         serialWrite iPort, 200
         kPingTime = kNow
     endif
 
-    ; lettura seriale byte per byte
+    ; byte-by-byte serial read
     kMoreData = 1
     while (kMoreData == 1) do
         kByte serialRead iPort
@@ -71,9 +71,9 @@ opcode NinoUpdate, 0, i
     od
 endop
 
-; --- NinoLed: accende/dimmerra un LED (id 0 = pin5, id 1 = pin6) ---
-; uso: NinoLed iPort, iId, kValore   (kValore 0-255)
-; manda il comando solo quando il valore cambia, per non intasare la seriale
+; --- NinoLed: turns an LED on/dims it (id 0 = pin5, id 1 = pin6) ---
+; usage: NinoLed iPort, iId, kValue   (kValue 0-255)
+; only sends the command when the value changes, so as not to flood the serial port
 opcode NinoLed, 0, iik
     iPort, iId, kVal xin
     kVal limit kVal, 0, 255
@@ -85,18 +85,18 @@ opcode NinoLed, 0, iik
 endop
 
 ; ============================================================
-;  ISTRUMENTO - qui usi le due UDO
+;  INSTRUMENT - use the two UDOs here
 ; ============================================================
 instr 1
-    ; SOSTITUISCI CON LA TUA PORTA MAC (nel Terminale: ls /dev/cu.*)
+    ; REPLACE WITH YOUR MAC PORT (in Terminal: ls /dev/cu.*)
     iPort serialBegin "/dev/cu.usbmodem14101", 115200
 
     NinoUpdate iPort
 
-    ; stampa di controllo (scommenta per debug)
+    ; debug print (uncomment to enable)
      printks "K0=%.2f K1=%.2f K2=%.2f K3=%.2f K4=%.2f K5=%.2f | B0=%d B1=%d B2=%d B3=%d B4=%d B5=%d\n", 0.2, gkKnob[0], gkKnob[1], gkKnob[2], gkKnob[3], gkKnob[4], gkKnob[5], gkBtn[0], gkBtn[1], gkBtn[2], gkBtn[3], gkBtn[4], gkBtn[5]
 
-    ; esempio: dimmerare il LED sul pin5 in base al knob 0
+    ; example: dim the LED on pin5 based on knob 0
     ; NinoLed iPort, 0, gkKnob[0] * 255
 
 endin

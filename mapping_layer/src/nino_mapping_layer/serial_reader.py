@@ -1,12 +1,12 @@
 """
-Lettura e parsing del protocollo seriale del controller NINO, piu'
-rilevamento automatico della porta USB (Mac e Linux).
+Reads and parses the NINO controller's serial protocol, plus automatic
+USB port detection (Mac and Linux).
 
-Protocollo atteso dall'Arduino (vedi firmware/NINO_CONTROLLER):
-    - riga di testo terminata da \\n, 12 campi separati da spazi:
-      6 float (0.0-1.0, i potenziometri) + 6 int (0/1, i pulsanti)
-    - risponde al ping (byte 200) restando "connesso"
-    - accetta comandi LED come coppia di byte: (id, valore 0-255)
+Protocol expected from the Arduino (see firmware/NINO_CONTROLLER):
+    - text line terminated by \\n, 12 space-separated fields:
+      6 floats (0.0-1.0, the knobs) + 6 ints (0/1, the buttons)
+    - replies to the ping (byte 200) by staying "connected"
+    - accepts LED commands as a pair of bytes: (id, value 0-255)
 """
 
 from __future__ import annotations
@@ -19,13 +19,13 @@ from typing import Callable, List, Optional
 import serial
 from serial.tools import list_ports
 
-# VID (vendor id) USB piu' comuni per Arduino e cloni compatibili.
-# Il rilevamento resta euristico: molti cloni economici usano chip
-# USB-seriale generici, non necessariamente un VID "Arduino" ufficiale.
+# Most common USB VIDs (vendor IDs) for Arduino and compatible clones.
+# Detection stays heuristic: many cheap clones use generic USB-serial
+# chips, not necessarily an official "Arduino" VID.
 KNOWN_VIDS = {
     0x2341,  # Arduino SA
     0x2A03,  # Arduino.org
-    0x1A86,  # QinHeng Electronics (CH340, cloni economici)
+    0x1A86,  # QinHeng Electronics (CH340, cheap clones)
     0x0403,  # FTDI
     0x10C4,  # Silicon Labs (CP210x)
 }
@@ -41,7 +41,7 @@ class PortCandidate:
 
 
 def list_serial_ports() -> List[PortCandidate]:
-    """Elenca le porte seriali disponibili, segnalando quelle che sembrano un Arduino."""
+    """List the available serial ports, flagging the ones that look like an Arduino."""
     candidates = []
     for p in list_ports.comports():
         likely = p.vid in KNOWN_VIDS
@@ -56,9 +56,9 @@ def list_serial_ports() -> List[PortCandidate]:
 
 def autodetect_port() -> Optional[str]:
     """
-    Ritorna la porta se ce n'e' esattamente una che sembra un Arduino.
-    Se sono zero o piu' di una, ritorna None (serve una scelta esplicita
-    con --port, tramite l'elenco di --list-ports).
+    Returns the port if there's exactly one that looks like an Arduino.
+    If there are zero or more than one, returns None (an explicit choice
+    is needed via --port, using the --list-ports listing).
     """
     likely = [c for c in list_serial_ports() if c.likely_arduino]
     if len(likely) == 1:
@@ -74,15 +74,15 @@ class NinoState:
 
 class SerialReader:
     """
-    Gestisce la connessione seriale con il controller NINO:
-      - manda un ping periodico (byte 200) per tenere viva la connessione
-      - legge il flusso ascii e lo spacchetta in 6 knob + 6 pulsanti
-      - invoca on_update(state) ogni volta che arriva una riga completa
-      - espone send_led(id, valore) per pilotare i LED sull'Arduino
+    Manages the serial connection with the NINO controller:
+      - sends a periodic ping (byte 200) to keep the connection alive
+      - reads the ascii stream and unpacks it into 6 knobs + 6 buttons
+      - calls on_update(state) every time a complete line arrives
+      - exposes send_led(id, value) to drive the LEDs on the Arduino
     """
 
     PING_BYTE = 200
-    PING_INTERVAL = 0.5  # secondi; deve restare sotto i 2s previsti dal firmware
+    PING_INTERVAL = 0.5  # seconds; must stay under the 2s expected by the firmware
 
     def __init__(
         self,
@@ -117,12 +117,12 @@ class SerialReader:
             self._ser.close()
 
     def send_led(self, led_id: int, value: int) -> None:
-        """Manda un comando LED: id (0=pin5, 1=pin6) + valore 0-255, come da firmware."""
+        """Sends an LED command: id (0=pin5, 1=pin6) + value 0-255, per the firmware."""
         value = max(0, min(255, int(value)))
         if self._ser and self._ser.is_open:
             self._ser.write(bytes([int(led_id), value]))
 
-    # --- interno ---
+    # --- internal ---
 
     def _ping_loop(self) -> None:
         while not self._stop.is_set():

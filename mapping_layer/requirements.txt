@@ -2,8 +2,8 @@ pyserial
 python-osc
 mido
 
-# Nota macOS: se hai JACK installato (es. via Homebrew), l'installazione di
-# python-rtmidi da questo file puo' fallire in compilazione (bug noto di
-# RtMidi col backend JACK su Darwin). Se succede, vedi la sezione
-# "Risoluzione problemi" nel README di questa cartella.
+# macOS note: if you have JACK installed (e.g. via Homebrew), installing
+# python-rtmidi from this file can fail to compile (a known RtMidi bug
+# with the JACK backend on Darwin). If that happens, see the
+# "Troubleshooting" section in this folder's README.
 python-rtmidi

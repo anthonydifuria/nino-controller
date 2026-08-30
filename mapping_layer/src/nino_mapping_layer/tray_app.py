@@ -1,5 +1,5 @@
 """
-Interfaccia a icona nella system tray (menu bar / tray):
-selezione porta seriale, stato connessione, avvio/stop.
-TODO: implementare.
+System tray (menu bar) icon interface: serial port selection,
+connection status, start/stop.
+TODO: implement.
 """

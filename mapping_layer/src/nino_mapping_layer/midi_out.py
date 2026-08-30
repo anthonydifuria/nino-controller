@@ -1,14 +1,14 @@
 """
-Uscita e ingresso MIDI classico per il mapping layer NINO.
+Standard MIDI output/input for the NINO mapping layer.
 
-Usa DUE porte MIDI virtuali distinte, per non confondere le due direzioni:
-    - "NINO"      (uscita dal bridge)  -> gli altri software la vedono come INPUT,
-                    riceve i 6 knob (CC 20-25) e i 6 pulsanti (CC 30-35)
-    - "NINO LED"  (ingresso al bridge) -> gli altri software la vedono come OUTPUT,
-                    ci mandano CC 40 per pilotare il LED sul pin 5 (0-127 -> 0-255)
+Uses TWO separate virtual MIDI ports, so the two directions don't get mixed up:
+    - "NINO"      (output from the bridge) -> other software sees it as an INPUT,
+                    receives the 6 knobs (CC 20-25) and the 6 buttons (CC 30-35)
+    - "NINO LED"  (input to the bridge)    -> other software sees it as an OUTPUT,
+                    it sends CC 40 to drive the LED on pin 5 (0-127 -> 0-255)
 
-Manda un messaggio in uscita solo quando il valore 7-bit cambia davvero, per
-non intasare inutilmente il canale MIDI.
+Only sends an outgoing message when the 7-bit value actually changes, so as
+not to needlessly flood the MIDI channel.
 """
 
 from __future__ import annotations
@@ -47,9 +47,9 @@ class MIDIOutput:
         self._last_button_val: List[Optional[int]] = [None] * 6
 
     def start(self) -> None:
-        # porta virtuale in uscita: gli altri software la vedono come INPUT
+        # virtual output port: other software sees it as an INPUT
         self._out_port = mido.open_output(self.port_name, virtual=True)
-        # porta virtuale in ingresso: gli altri software la vedono come OUTPUT
+        # virtual input port: other software sees it as an OUTPUT
         self._in_port = mido.open_input(self.led_port_name, virtual=True)
 
         self._stop.clear()
